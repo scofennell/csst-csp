@@ -20,6 +20,9 @@ class Headers {
 
 	}
 
+	/**
+	 * Add our CSP to the http headers.
+	 */
 	function send_headers() {
 
 		$rest_version = $this -> meta -> get_rest_version();

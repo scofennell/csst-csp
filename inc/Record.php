@@ -16,26 +16,66 @@ class Record {
 
 		$this -> meta = get_csst_consecpol() -> meta;
 
-
 		$this -> maybe_add_header_row();
 		$this -> set_item( $record );
-		$this -> set_log_entry();
+		$this -> add_log_entry();
 	
 	}
 
+	/**
+	 * Maybe add the header row to the file.
+	 * 
+	 * @return mixed Returns NULL if the file already exists, else a call to our add_row() method.
+	 */
+	function maybe_add_header_row() {
+
+		$out = NULL;
+
+		// Does the file exist?  If so, bail.
+		$path        = $this -> meta -> get_log_file_path();
+		$file_exists = file_exists( $path );
+		if( $file_exists ) { return NULL; }
+
+		// Prepare the header row.
+		$array = array(
+			'blog_id',
+			'blocked_uri',
+			'document_uri',
+		);
+		
+		// Add the header to the file.
+		$out = $this -> add_row( $array );
+		
+		return $out;
+
+	}
+
+	/**
+	 * Store the CSP report.
+	 * 
+	 * @param array A CSP report.
+	 */
 	function set_item( $record ) {
 
 		$this -> item = $record;
 
 	}
 
+	/**
+	 * Get the CSP report.
+	 * 
+	 * @return array A CSP report.
+	 */
 	function get_item() {
 
 		return $this -> item;
 
 	}
 
-	function set_log_entry() {
+	/**
+	 * Add the CSP to the spreadsheet.
+	 */
+	function add_log_entry() {
 
 		$item = $this -> get_item();
 
@@ -45,50 +85,27 @@ class Record {
 
 	}
 
-	function maybe_add_header_row() {
-
-		$out = NULL;
-
-		$path = $this -> meta -> get_log_file_path();
-
-		$file_exists = file_exists( $path );
-		if( ! $file_exists ) {
-		
-			$array = array(
-				'blog_id',
-				'blocked_uri',
-				'document_uri',
-			);
-		
-			$out = $this -> add_row( $array );
-		
-		}
-
-		return $out;
-
-	}
-
+	/**
+	 * Add a row to the spreadsheet.
+	 */
 	function add_row( $array ) {
+
+		global $wp_filesystem;
 
 		// Open for writing only; place the file pointer at the end of the file. If the file does not exist, attempt to create it.
 		$mode = 'a';
 
-		$path = $this -> meta -> get_log_file_path();
+		// Open the file.
+		$path   = $this -> meta -> get_log_file_path();
+		$handle = $wp_filesystem -> fopen( $path, $mode );
 
-		$handle = fopen( $path, $mode );
+		// Add the row to the spreadsheet.
+		$wp_filesystem -> fputcsv( $handle, $array );
 
-		// $item is an array of string values here.
-		fputcsv( $handle, $array );
-
-		fclose( $handle );
+		// Close the file.
+		$wp_filesystem -> fclose( $handle );
 
 		return TRUE;		
-
-	}
-
-	function get_log_entry() {
-
-		return $this -> log_entry;
 
 	}
 

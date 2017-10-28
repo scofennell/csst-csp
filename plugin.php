@@ -7,13 +7,12 @@
  * @subpackage CSST_ConSecPol
  * @since CSST_ConSecPol 0.1
  * 
- * Plugin Name: CSST ConSecPol
- * Plugin URI: https://www.lexblog.com
+ * Plugin Name: CSS-Tricks Content Security Policy
+ * Plugin URI: https://github.com/scofennell/csst-csp
  * Description: A plugin for sending and handling content security policy.
- * Author: Angelo Carosio & Scott Fennell
+ * Author: Scott Fennell
  * Version: 0.6.3
- * Author URI: http://www.lexblog.com
- * Network: True
+ * Author URI: http://www.scottfennell.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as 
